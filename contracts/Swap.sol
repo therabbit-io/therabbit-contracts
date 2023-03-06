@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Swap is ReentrancyGuard, Ownable {
     uint256 public rateAB;
+    bool public isActive;
     address public tokenA;
     address public tokenB;
 
@@ -26,12 +27,17 @@ contract Swap is ReentrancyGuard, Ownable {
       tokenB = _tokenB;
     }
 
+    function setStatus(bool _status) external onlyOwner {
+      isActive = _status;
+    }
+
     function setRate(uint256 _rateAB) external onlyOwner {
       require(_rateAB > 0, "Swap: rateAB need > 0");
       rateAB = _rateAB;
     }
 
     function swap(uint256 _amountA) external {
+      require(isActive, "Swap: not active");
       require(_amountA > 0, "Swap: _amountA need > 0");
 
       IERC20(tokenA).transferFrom(msg.sender, address(this), _amountA);
