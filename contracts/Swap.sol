@@ -41,7 +41,7 @@ contract Swap is ReentrancyGuard, Ownable {
       require(_amountA > 0, "Swap: _amountA need > 0");
 
       IERC20(tokenA).transferFrom(msg.sender, address(this), _amountA);
-      uint256 convertedAmount = _amountA / rateAB;
+      uint256 convertedAmount = (_amountA * 10 ** 10) / rateAB;
       require(IERC20(tokenB).balanceOf(address(this)) >= convertedAmount, "Insufficient Token B balance");
       IERC20(tokenB).transfer(msg.sender, convertedAmount);
 
